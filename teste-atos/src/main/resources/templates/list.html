@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaft.org">
+<head>	
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <title>Teste Atos</title>
+  <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+</head>
+<body>
+  <div class="jumbotron text-center">
+    <h1 th:text="#{list.mainTitle}">Employee List</h1>
+    <ul class="list-inline">
+      <li class="list-inline-item" th:text="#{list.languageChange}">Choose your language:</li>
+      <li class="list-inline-item"><a th:href="@{../?lang=en}">English</a></li>
+      <li class="list-inline-item"><a th:href="@{../?lang=pt_BR}">Português</a></li>
+    </ul>
+  </div>
+  <div class="container">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" th:text="#{list.activeFilter}"></span>
+      </div>
+      <input type="text" class="form-control" th:placeholder="#{list.noFilter}" th:value="${activeFilter}" aria-label="Active Filter" aria-describedby="basic-addon1">
+    </div>
+    <div class="form-group row align-middle">
+      <form class="form-inline" id="filterForm" action="#" th:action="@{/filter}" th:object="${activeFilter}" method="post">
+        <input id="skills" type="hidden" th:value="${skills}" name="skills">
+        <div class="form-group mb-6">
+		<select id="skillSelectFilter" class="selectpicker" name="activeFilter" multiple
+		th:data-none-selected-text="#{list.filterNoneSelected}" data-live-search="true" data-actions-box="true"
+		th:data-select-all-text="#{list.filterSelectAll}" th:data-deselect-all-text="#{list.filterDeselectAll}"
+		th:data-live-search-placeholder="#{list.filterSearchPlaceholder}">
+		  <option th:each="skill : ${skills}" th:value="${skill}" th:text="${skill}"></option>
+		</select>
+		</div>
+        <button class="btn btn-primary mb-2" id="submitFilter" type="submit" th:text="#{list.filter}"/>
+      </form>
+    </div>
+		
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th class="text-center" 
+            th:text="#{list.name}">Name
+          </th>
+          <th class="text-center"
+            th:text="#{list.role}">Role
+          </th>
+          <th class="text-center"
+            th:text="#{list.salary}">Salary
+          </th>
+          <th class="text-center"
+            th:text="#{list.gcm}">GCM
+          </th>
+          <th class="text-center" 
+            th:text="#{list.manager}">Manager
+          </th>
+          <th class="text-center"
+            th:text="#{list.viewSkills}">View skills
+          </th>
+          <th class="text-center"
+            th:text="#{list.viewProjects}">View projects
+          </th>
+          <th class="text-center"
+            th:text="#{list.viewCertification}">View certification
+          </th>
+        </tr>
+      </thead>
+      <tbody class="table-striped">
+        <tr th:each="employee : ${employees}">
+          <td class="text-center"
+            th:text="${employee.name}">Employee Name
+          </td>
+          <td class="text-center"
+            th:text="${employee.role}">Role
+          </td>
+          <td class="text-center"
+            th:text="'R$ ' + ${employee.salary}">9999.99
+          </td>
+          <td class="text-center"
+            th:text="${employee.gcm}">00
+          </td>
+          <td class="text-center" 
+            th:text="${employee.manager}">Manager Name
+          </td>
+          <td>
+            <button type="button" class="btn btn-default" style="width: 100%;" data-toggle="modal" th:data-target="'#skill'+${employee.id}">
+  	          <i class="fas fa-search align-middle"></i>
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-default" style="width: 100%;" data-toggle="modal" th:data-target="'#projects'+${employee.id}">
+  	          <i class="fas fa-search"></i>
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-default" style="width: 100%;" data-toggle="modal" th:data-target="'#certification'+${employee.id}">
+  	          <i class="fas fa-search"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <th:block th:each="employee :${employees}">
+    <div class="modal fade" th:id="skill+${employee.id}" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" th:text="#{list.skills}">Skills</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul th:each="skill : ${employee.skills}">
+              <li
+                th:text="${skill}">Skill
+              </li>  
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{list.closeModal}">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" th:id="projects+${employee.id}" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" th:text="#{list.projects}">Projects</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-bordered">
+              <thead class="thead-dark">
+          	    <tr>
+                  <th class="text-center"
+                    th:text="#{list.projectName}">Project Name
+                  </th>
+                  <th class="text-center"
+                    th:text="#{list.projectCustomer}">Customer
+                  </th>
+                  <th class="text-center"
+                    th:text="#{list.projectValue}">Project Value
+                  </th>
+          		  <th class="text-center"
+          	        th:text="#{list.projectBeginDate}">Start Date
+                  </th>
+          	      <th class="text-center"
+                    th:text="#{list.projectEndDate}">End Date
+          	      </th>
+                </tr>
+              </thead>
+              <tbody class="table-striped">
+                <tr th:if="${employee.projects.empty}">
+                  <td class="text-center" colspan="5"
+                    th:text="#{list.noProjects}">No projects.  
+                  </td>
+                </tr>
+                <tr th:each="project : ${employee.projects}">
+                  <td
+                    th:text="${project.name}">Project Name
+                  </td>
+                  <td
+                    th:text="${project.customer}">Project Customer
+                  </td>
+                  <td
+                    th:text="'R$ ' + ${project.valueOfProject}">R$99999,99</td>
+                  <td
+                    th:text="${#temporals.format(project.dtBegin, 'dd/MM/yyyy')}">dd/MM/yyyy
+                  </td>
+                  <td
+                    th:text="${#temporals.format(project.dtEnd, 'dd/MM/yyyy')}">dd/MM/yyyy
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{list.closeModal}">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" th:id="certification+${employee.id}" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" th:text="#{list.certification}">Certification</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul th:each="certification : ${employee.certification}">
+              <li
+                th:text="${certification}">Certification
+              </li>  
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{list.closeModal}">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </th:block>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="js/bootstrap-select.js"></script>
+<script th:inline="javascript">
+  $(document).ready(function(){
+	  
+    $("#filterForm").submit(function(e){
+      if( $("#skillSelectFilter option:selected").val() == undefined) {
+        e.preventDefault();
+        window.location.href="../"
+      }
+    });
+    
+    $('#skillSelectFilter').selectpicker({
+      style: 'btn-info',
+      size: 3
+    });
+    
+    var skills = $("#skills").val();
+    skills = skills.slice(1,-1);
+    $("#skills").val(skills);
+  });
+</script>
+</html>

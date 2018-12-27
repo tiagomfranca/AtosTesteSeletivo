@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaft.org">
+<head>	
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <title>Teste Atos</title>
+  <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="jumbotron text-center">
+    <h1 th:text="#{list.mainTitle}">Something went wrong</h1>
+  </div>
+  <div class="container">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title"
+          th:text="#{error.error}"> Unable to Display Page
+        </h5>
+        <p class="card-text"
+          th:text="#{error.description}"> Error
+        </p>
+        <p class="card-text"
+          th:text="${error}">404 - Not Found
+        </p>
+        <a href="../" th:text="#{error.back}" class="btn btn-primary">Go Back</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
